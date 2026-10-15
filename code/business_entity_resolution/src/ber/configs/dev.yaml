@@ -1,0 +1,20 @@
+# Fast iteration: the full pipeline on a small slice of states.
+extends: default.yaml
+
+run_id: dev
+log_level: DEBUG
+
+data:
+  slice: dev
+
+features:
+  train_query_frac: 1.0
+
+scorer:
+  train_query_frac: 1.0
+  es_query_frac: 1.0
+
+rerank:               # the dev slice has no held-out regions of its own
+  hold_frac: 0.0
+  train_sides: [val]
+  extra_scores: null  # no cross-encoder: the scorer trains on every dev train record (none left for it)

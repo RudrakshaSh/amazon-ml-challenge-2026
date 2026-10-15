@@ -1,0 +1,9 @@
+# Scanner-style digit->letter confusions seen in true pairs (EDA 03 single-char
+# substitutions: o->0, l->1, s->5, b->8, g->6). Applied only inside name tokens that
+# mix letters and digits (never to plain numbers or ordinals like 1st).
+digit	letter
+0	o
+1	l
+5	s
+8	b
+6	g

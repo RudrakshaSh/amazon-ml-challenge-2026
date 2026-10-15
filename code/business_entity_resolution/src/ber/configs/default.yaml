@@ -1,0 +1,133 @@
+# Default pipeline configuration. Every key is documented here; the schema
+# (types, defaults) is in src/ber/config.py and unknown keys are rejected.
+# Override per run with another file (`extends: default.yaml`) or
+# `--set section.key=value` on the command line.
+
+run_id: main          # artifacts go to <artifacts_dir>/<run_id>/
+seed: 42
+log_level: INFO
+
+paths:                # relative to the project root (dir containing dataset/)
+  root: ""            # "" = auto-detect; or set BER_ROOT
+  data_dir: dataset
+  artifacts_dir: artifacts
+  output_dir: output
+
+data:
+  slice: null         # null = full data; "dev" = small dev slice (defined in T0.3)
+  split_run: main     # run whose `split` stage defines train/val sides and the dev slice
+  with_test: true     # also process the test split (only when slice is null)
+  phase: all          # all | train (train/val side only, for fast experiments) |
+                      # test (test side only; reuses the train-side outputs of each stage)
+
+split:                # geographic train/val split + dev slice (T0.3); whole regions per country
+  val_frac: 0.10      # share of each country's S1 entities held out for validation
+  dev_train_frac: 0.02  # dev slice: share of the country drawn from train regions
+  dev_val_frac: 0.01    # dev slice: share of the country drawn from val regions
+
+normalize:            # stage 0 (T1.x)
+  workers: 0          # processes; 0 = cpu_count - 2
+  chunk_size: 100000  # records per worker task
+  dict_min_count: 2   # Indic->Latin dictionary: min aligned occurrences of a token pair
+  dict_min_share: 0.6 # ... and min share of the dominant Latin spelling
+
+candidates:           # stage 1 (T2.x): char n-gram TF-IDF top-k per country
+  ngram: 3            # character n-gram size (char_wb)
+  k_name: 10          # top-k S1 per query from the name index
+  k_addr: 10          # top-k S1 per query from the address index
+  k_combo: 10         # top-k S1 per query from the name+address index
+  max_df: 0.05        # ignore n-grams present in more than this share of S1 (speed)
+  min_sim: 0.0        # drop top-k hits below this cosine
+  chunk_size: 20000   # queries per sparse matmul chunk (memory vs speed)
+  n_threads: 0        # 0 = cpu_count - 2
+  block_by_region: true   # search only S1 in the query region's neighbourhood (no region: whole country)
+  region_min_share: 0.001 # neighbourhood = owner regions with >= this share of a region's true matches
+  k_name_noaddr: 30       # name candidates for queries with an empty address
+  device: auto            # top-k search: cpu | gpu (optional CuPy, MIT; ~10-30x faster) | auto
+  gpu_mem_gb: 1.5         # GPU memory for one chunk's dense similarity block
+  gpu_min_s1: 50000       # smaller blocks search on the CPU (GPU wins only on large blocks)
+
+features:             # stage 2 (T3.3)
+  train_query_frac: 0.2   # share of train-side queries featurised (val side: all)
+  chunk_rows: 1000000     # candidate pairs per feature chunk (memory vs speed)
+  name_key: true          # v2: filler-free name keys + IDF-weighted token overlap (k_* features)
+  filler_min_rate: 0.0005 # filler words (learned, no labels): >= this share of S2/S3 names ...
+  filler_min_ratio: 2.0   # ... and >= this many times their share of S1 names
+
+scorer:               # stage 2 (T3.4): LightGBM pair scorer
+  learning_rate: 0.05
+  num_leaves: 127
+  min_data_in_leaf: 200
+  feature_fraction: 0.8
+  bagging_fraction: 0.8
+  lambda_l2: 1.0
+  num_boost_round: 3000
+  early_stopping: 100   # rounds without val logloss improvement
+  n_threads: 0          # 0 = cpu_count - 2
+  train_query_frac: 0.14  # share of featurised train-side queries (outside the hold regions) used to
+                          # train: ~3.6M rows, ~1.5 GB float32 (v2.4: 0.1 with hold_frac 0.2, same size)
+  es_query_frac: 0.05     # share of val-side queries used for early stopping (all val pairs are scored)
+  drop_features: []       # ablations: feature names or "prefix*" left out of the model
+
+crossenc:             # v2.7 (ber crossenc): a transformer cross-encoder reads both records' normalised
+                      # text ("name core + legal form ; address + region") jointly. Fine-tuned on stage 1's
+                      # own out-of-sample pairs (train-side records outside the hold regions that the
+                      # scorer did not train on, p1 >= rerank.min_p1), it then scores every stage-2 pair
+                      # (val, hold, test); stage 2 uses the scores (rerank.extra_scores: crossenc)
+  base_model: cross-encoder/ms-marco-MiniLM-L-6-v2  # Hugging Face id (Apache-2.0, 22 M parameters) or a local copy
+  max_len: 64         # tokens per pair (record text + S1 text; ~3 % of pairs truncated)
+  batch_size: 256     # fine-tuning batch (fp16 on CUDA)
+  learning_rate: 0.00005
+  weight_decay: 0.01
+  warmup: 0.05        # share of the steps with a linear warm-up
+  epochs: 2
+  infer_batch: 2048   # scoring batch; halved automatically on CUDA out-of-memory
+  chunk: 1000000      # pairs tokenised at a time (memory vs speed)
+
+rerank:               # stage 2b: re-ranker with S1/query group context from stage-1 p (ber rerank)
+  min_p1: 0.001       # pairs below this stage-1 p are dropped first (never selected anyway)
+  folds: 4            # trained on the val side, cross-fitted: out-of-fold p2 for every val pair
+  fold_by: s1         # s1 (folds grouped by the record's top S1) | region (whole regions per fold: robustness check)
+  domain_norm: true   # divide size/density-dependent features by their per-country, per-split scale (LB 0.977 -> 0.980)
+  hold_frac: 0.4      # > 0 sets aside whole train-side regions (~this share of each country's S1)
+                      # for stage 2: `ber features-hold` featurises all their queries, the scorer
+                      # trains without them and scores them (scores_hold), stage 2 can train on them
+                      # (v2.4: 0.2; v2.5: 0.4, unseen-region val +0.0003 on complete groups)
+  train_sides: [val, hold]  # stage-2 training pairs: [val] | [val, hold] | [hold] (hold only: val is then
+                      # scored by the fold mean, i.e. a pure unseen-region check)
+  train_complete: true  # v2.5: train only on pairs whose S1 lies in a loaded (val / hold) region, i.e.
+                      # whose group is complete as at test time; the others are still scored
+  norm_complete: true # v2.6: with domain_norm, the S1-group counts take their training scale from
+                      # complete-group pairs only (the empty groups pulled the mean 9-10 % below
+                      # test's, where every group is complete); LB 0.981708 -> 0.982344
+  extra_scores: crossenc  # v2.7: the crossenc stage's pair scores (cross-encoder logit) and their margin /
+                      # rank among the record's candidates and within the S1's group as stage-2 features
+                      # (val F0.5 0.98918 -> 0.99078, public LB 0.982344 -> 0.98316); null = v2.6 (no
+                      # cross-encoder); or a dir with val/hold/test_<country>.parquet (q_id, s1_id, ce)
+  learning_rate: 0.05
+  num_leaves: 63
+  min_data_in_leaf: 200
+  lambda_l2: 1.0
+  feature_fraction: 0.9
+  num_boost_round: 2000
+  early_stopping: 50
+  raw_features: [all]  # stage-1 features passed through: all (val F0.5 0.98895) or a list
+                       # (the 25 of the first v2 file: 0.98748; region-held-out CV 0.98684 vs 0.98581)
+
+decide:               # stage 4 (T3.5/T4.1)
+  method: expected_f  # threshold | expected_f (ratio approximation) | expected_f_exact (v2)
+  threshold: null     # threshold method: null = best value from the val sweep
+  min_p: null         # expected_f: drop assigned pairs below this p; null = best from sweep
+  empty_prior: 1.0    # expected_f: multiplier on P(no true match) for the "no match" option
+  tie_duplicates: true  # exact duplicate S2/S3 records (same source/name/address) share one owner
+  prior_shift: anchor   # none | anchor: per name-change kind (exact / typo / generic-word swap / other), the
+                        # share of true copies from the house-number mixture vs the model's mean p,
+                        # de-biased on val (decide/anchor.py; France's generic-word swaps)
+  anchor_min_ratio: 2.0   # anchor: correct a kind only if its de-biased odds ratio is beyond 2x (or 1/2x)
+  anchor_min_pairs: 2000  # anchor: ... and it has at least this many same-street pairs
+  anchor_max_ratio: 6.0   # anchor: cap on the applied odds ratio
+  scores_stage: rerank  # scorer (stage 1 only) | rerank (stage 2)
+  sweep: [0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 0.7, 0.8]
+
+submit:
+  write_candidates: true   # output/candidate_pairs.tsv = pairs the final model scores (required in the final zip)

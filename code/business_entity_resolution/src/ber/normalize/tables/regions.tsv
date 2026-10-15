@@ -1,0 +1,217 @@
+# Region lookup: every spelling of a state/region seen in the data -> one code.
+# kind=code rows match only an exact upper-case address component; kind=name rows match
+# case- and accent-insensitively. Indic-script spellings come from train addresses (EDA).
+country	code	variant	kind
+US	AL	AL	code
+US	AL	Alabama	name
+US	AK	AK	code
+US	AK	Alaska	name
+US	AZ	AZ	code
+US	AZ	Arizona	name
+US	AR	AR	code
+US	AR	Arkansas	name
+US	CA	CA	code
+US	CA	California	name
+US	CO	CO	code
+US	CO	Colorado	name
+US	CT	CT	code
+US	CT	Connecticut	name
+US	DE	DE	code
+US	DE	Delaware	name
+US	DC	DC	code
+US	DC	District of Columbia	name
+US	FL	FL	code
+US	FL	Florida	name
+US	GA	GA	code
+US	GA	Georgia	name
+US	HI	HI	code
+US	HI	Hawaii	name
+US	ID	ID	code
+US	ID	Idaho	name
+US	IL	IL	code
+US	IL	Illinois	name
+US	IN	IN	code
+US	IN	Indiana	name
+US	IA	IA	code
+US	IA	Iowa	name
+US	KS	KS	code
+US	KS	Kansas	name
+US	KY	KY	code
+US	KY	Kentucky	name
+US	LA	LA	code
+US	LA	Louisiana	name
+US	ME	ME	code
+US	ME	Maine	name
+US	MD	MD	code
+US	MD	Maryland	name
+US	MA	MA	code
+US	MA	Massachusetts	name
+US	MI	MI	code
+US	MI	Michigan	name
+US	MN	MN	code
+US	MN	Minnesota	name
+US	MS	MS	code
+US	MS	Mississippi	name
+US	MO	MO	code
+US	MO	Missouri	name
+US	MT	MT	code
+US	MT	Montana	name
+US	NE	NE	code
+US	NE	Nebraska	name
+US	NV	NV	code
+US	NV	Nevada	name
+US	NH	NH	code
+US	NH	New Hampshire	name
+US	NJ	NJ	code
+US	NJ	New Jersey	name
+US	NM	NM	code
+US	NM	New Mexico	name
+US	NY	NY	code
+US	NY	New York	name
+US	NC	NC	code
+US	NC	North Carolina	name
+US	ND	ND	code
+US	ND	North Dakota	name
+US	OH	OH	code
+US	OH	Ohio	name
+US	OK	OK	code
+US	OK	Oklahoma	name
+US	OR	OR	code
+US	OR	Oregon	name
+US	PA	PA	code
+US	PA	Pennsylvania	name
+US	RI	RI	code
+US	RI	Rhode Island	name
+US	SC	SC	code
+US	SC	South Carolina	name
+US	SD	SD	code
+US	SD	South Dakota	name
+US	TN	TN	code
+US	TN	Tennessee	name
+US	TX	TX	code
+US	TX	Texas	name
+US	UT	UT	code
+US	UT	Utah	name
+US	VT	VT	code
+US	VT	Vermont	name
+US	VA	VA	code
+US	VA	Virginia	name
+US	WA	WA	code
+US	WA	Washington	name
+US	WV	WV	code
+US	WV	West Virginia	name
+US	WI	WI	code
+US	WI	Wisconsin	name
+US	WY	WY	code
+US	WY	Wyoming	name
+US	PR	PR	code
+US	PR	Puerto Rico	name
+India	AN	AN	code
+India	AN	Andaman and Nicobar Islands	name
+India	AP	AP	code
+India	AP	Andhra Pradesh	name
+India	AP	ఆంధ్రప్రదేశ్	name
+India	AP	ఆంధ్ర ప్రదేశ్	name
+India	AR	AR	code
+India	AR	Arunachal Pradesh	name
+India	AS	AS	code
+India	AS	Assam	name
+India	BR	BR	code
+India	BR	Bihar	name
+India	BR	बिहार	name
+India	CH	CH	code
+India	CH	Chandigarh	name
+India	CG	CG	code
+India	CG	Chhattisgarh	name
+India	CG	CT	code
+India	CG	Chattisgarh	name
+India	DN	DN	code
+India	DN	Dadra and Nagar Haveli	name
+India	DD	DD	code
+India	DD	Daman and Diu	name
+India	DL	DL	code
+India	DL	Delhi	name
+India	DL	New Delhi	name
+India	DL	NCT of Delhi	name
+India	DL	दिल्ली	name
+India	GA	GA	code
+India	GA	Goa	name
+India	GJ	GJ	code
+India	GJ	Gujarat	name
+India	GJ	ગુજરાત	name
+India	HR	HR	code
+India	HR	Haryana	name
+India	HR	हरियाणा	name
+India	HP	HP	code
+India	HP	Himachal Pradesh	name
+India	JK	JK	code
+India	JK	Jammu and Kashmir	name
+India	JK	Jammu & Kashmir	name
+India	JH	JH	code
+India	JH	Jharkhand	name
+India	KA	KA	code
+India	KA	Karnataka	name
+India	KA	ಕರ್ನಾಟಕ	name
+India	KL	KL	code
+India	KL	Kerala	name
+India	KL	Keralam	name
+India	KL	കേരളം	name
+India	LA	LA	code
+India	LA	Ladakh	name
+India	LD	LD	code
+India	LD	Lakshadweep	name
+India	MP	MP	code
+India	MP	Madhya Pradesh	name
+India	MP	मध्य प्रदेश	name
+India	MH	MH	code
+India	MH	Maharashtra	name
+India	MH	महाराष्ट्र	name
+India	MN	MN	code
+India	MN	Manipur	name
+India	ML	ML	code
+India	ML	Meghalaya	name
+India	MZ	MZ	code
+India	MZ	Mizoram	name
+India	NL	NL	code
+India	NL	Nagaland	name
+India	OD	OD	code
+India	OD	Odisha	name
+India	OD	Orissa	name
+India	OD	OR	code
+India	PY	PY	code
+India	PY	Puducherry	name
+India	PY	Pondicherry	name
+India	PB	PB	code
+India	PB	Punjab	name
+India	PB	ਪੰਜਾਬ	name
+India	RJ	RJ	code
+India	RJ	Rajasthan	name
+India	RJ	राजस्थान	name
+India	SK	SK	code
+India	SK	Sikkim	name
+India	TN	TN	code
+India	TN	Tamil Nadu	name
+India	TN	தமிழ்நாடு	name
+India	TG	TG	code
+India	TG	Telangana	name
+India	TG	TS	code
+India	TG	తెలంగాణ	name
+India	TR	TR	code
+India	TR	Tripura	name
+India	UP	UP	code
+India	UP	Uttar Pradesh	name
+India	UP	उत्तर प्रदेश	name
+India	UK	UK	code
+India	UK	Uttarakhand	name
+India	UK	UT	code
+India	UK	Uttaranchal	name
+India	WB	WB	code
+India	WB	West Bengal	name
+India	WB	পশ্চিমবঙ্গ	name
+France	HDF	Hauts-de-France	name
+France	HDF	Nord	name
+France	HDF	Pas-de-Calais	name
+France	NAQ	Nouvelle-Aquitaine	name
+France	NAQ	Gironde	name
+France	PDL	Pays de la Loire	name
+France	PDL	Loire-Atlantique	name

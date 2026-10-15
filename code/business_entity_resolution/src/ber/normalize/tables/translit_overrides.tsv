@@ -1,0 +1,7 @@
+# Romanised short forms (output of the rule transliterator) -> Latin word.
+# Abbreviations like प्रा./ਪ੍ਰਾ (pvt) and लि./ਲਿ (ltd) are too short for skeleton matching.
+romanised	latin
+pra	pvt
+pri	pvt
+li	ltd
+lim	ltd

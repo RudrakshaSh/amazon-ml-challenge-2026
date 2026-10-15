@@ -1,0 +1,29 @@
+# Pinned dependencies of the whole pipeline (tested with Python 3.12 and 3.13).
+# Licenses verified with src/tools/check_licenses.py.
+#
+# torch: the extra index below provides the CUDA 12.6 build (needs an NVIDIA GPU for
+# reasonable speed); where no CUDA build exists (macOS), pip installs the
+# CPU build of the same version from PyPI.
+--extra-index-url https://download.pytorch.org/whl/cu126
+
+numpy==2.5.3
+pandas==3.0.6
+pyarrow==25.0.1
+scipy==1.18.1
+scikit-learn==1.9.1
+rapidfuzz==3.14.6
+lightgbm==4.7.0
+PyYAML==6.0.3
+indic-transliteration==2.3.82   # MIT; rule-based Indic-to-Latin fallback
+sparse_dot_topn==1.2.0         # Apache-2.0; multithreaded sparse top-k
+psutil==7.2.2
+torch==2.14.0                  # BSD-3-Clause; cross-encoder
+transformers==5.17.0           # Apache-2.0
+tokenizers==0.23.2             # Apache-2.0
+safetensors==0.8.0             # Apache-2.0
+huggingface_hub==1.33.0        # Apache-2.0
+pytest==9.1.1
+
+# Optional, not needed for the submitted configuration:
+#   GPU top-k retrieval (candidates.device: auto uses it when present; needs an NVIDIA GPU
+#   and the CUDA 13 toolkit):  cupy-cuda13x==14.2.0  cuda-pathfinder==1.8.2  (MIT)

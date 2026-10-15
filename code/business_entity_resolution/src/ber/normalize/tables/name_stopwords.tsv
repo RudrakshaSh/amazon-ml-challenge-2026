@@ -1,0 +1,17 @@
+# Tokens dropped from name_core (kept in name_norm): articles, honorifics and connectors
+# that the noise adds or drops freely (EDA 03: the, mr, smt, shri, sri, and, m/s).
+# v2: of (dropped in ~12% of true pairs), et (French '&'), dr (honorific the noise prepends
+# to Indian names; never in S1), id ("(ID: 63317)" suffixes).
+token	reason
+the	article
+and	connector
+mr	honorific
+mrs	honorific
+ms	honorific
+smt	honorific
+shri	honorific
+sri	honorific
+of	connector
+et	connector
+dr	honorific
+id	injected record id

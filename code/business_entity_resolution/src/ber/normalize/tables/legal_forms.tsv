@@ -1,0 +1,34 @@
+# Legal-form tokens -> canonical form. Matched on normalised name tokens, after runs of
+# single letters are joined ("L.L.C." -> "l l c" -> "llc"). Removed from name_core and kept
+# in name_legal. Source: EDA 03 (added/dropped/replaced tokens) and 06 (France).
+variant	canonical
+inc	inc
+incorporated	inc
+lnc	inc
+llc	llc
+pllc	pllc
+lp	lp
+llp	llp
+ltd	ltd
+limited	ltd
+plc	plc
+pvt	pvt
+private	pvt
+corp	corp
+corporation	corp
+co	co
+company	co
+cie	co
+pc	pc
+pa	pa
+opc	opc
+sarl	sarl
+sas	sas
+sasu	sasu
+eurl	eurl
+sa	sa
+sci	sci
+snc	snc
+ei	ei
+scop	scop
+selarl	selarl

@@ -1,0 +1,25 @@
+# Address tokens/components removed before comparison, per country ("*" = all).
+# Placeholders (null, n/a) and unit/house prefixes that the noise swaps freely
+# (EDA 03: plot/flat/shop -> h/door; Unit -> #; 06: N°, No.).
+country	token
+*	null
+*	na
+*	none
+*	no
+*	nº
+*	n
+*	number
+*	unit
+*	apt
+*	suite
+*	door
+*	h
+*	hno
+*	plot
+*	flat
+*	shop
+*	room
+*	india
+*	usa
+*	us
+*	france
